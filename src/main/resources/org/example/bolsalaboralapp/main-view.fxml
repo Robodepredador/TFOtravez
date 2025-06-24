@@ -90,7 +90,7 @@
             <!-- Lista de trabajos (centro) -->
             <VBox maxWidth="400" minWidth="300" prefHeight="565.0" prefWidth="393.0" spacing="15" styleClass="jobs-list-panel">
                 <Label styleClass="section-title" text="Puestos de Trabajo" />
-                <ListView prefHeight="487.0" prefWidth="300.0" styleClass="jobs-list-view">
+                <ListView fx:id="jobsListView" prefHeight="487.0" prefWidth="300.0" styleClass="jobs-list-view">
                     <!-- Los items se cargarán dinámicamente -->
                 </ListView>
             </VBox>
