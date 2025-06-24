@@ -19,7 +19,7 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     public void guardar(Usuario usuario) {
         String sql = "INSERT INTO usuario (nombre_usuario, contrasena) VALUES (?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, usuario.getNombreUsuario());
+            stmt.setString(1, usuario.getNombreCompleto());
             stmt.setString(2, usuario.getContrasena());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -38,7 +38,9 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
                         rs.getInt("id"),
                         rs.getString("nombre_usuario"),
                         rs.getString("correo"),
-                        rs.getString("contrasena")
+                        rs.getString("contrasena"),
+                        rs.getString("distrito"),
+                        rs.getString("telefono")
                 );
                 return Optional.of(usuario);
             }
@@ -59,7 +61,9 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
                         rs.getInt("id"),
                         rs.getString("nombre_usuario"),
                         rs.getString("correo"),
-                        rs.getString("contrasena")
+                        rs.getString("contrasena"),
+                        rs.getString("distrito"),
+                        rs.getString("telefono")
                 );
                 return Optional.of(usuario);
             }
@@ -80,7 +84,9 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
                         rs.getInt("id"),
                         rs.getString("nombre_usuario"),
                         rs.getString("correo"),
-                        rs.getString("contrasena")
+                        rs.getString("contrasena"),
+                        rs.getString("distrito"),
+                        rs.getString("telefono")
                 ));
             }
         } catch (SQLException e) {

@@ -1,52 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.geometry.Insets?>
-<BorderPane stylesheets="@css/perfil.css, @css/jobs.css" xmlns:fx="http://javafx.com/fxml/1"
-            xmlns="http://javafx.com/javafx"
-            fx:controller="org.example.bolsalaboralapp.MainController">
+<BorderPane stylesheets="@css/jobs.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.bolsalaboralapp.MainController">
 
-    <!-- Barra superior simplificada -->
+    <!-- Barra superior -->
     <top>
-        <HBox xmlns="http://javafx.com/javafx/17.0.12"
-              xmlns:fx="http://javafx.com/fxml/1"
-              styleClass="top-bar">
-            <padding>
-                <Insets bottom="10" left="15" right="15" top="10"/>
-            </padding>
+        <HBox styleClass="top-bar">
+            <padding><Insets bottom="10" left="15" right="15" top="10" /></padding>
 
             <Button onAction="#mostrarMainMenu" styleClass="icon-only-back-button">
                 <graphic>
                     <ImageView fitHeight="24" fitWidth="24">
-                        <Image url="@imagenes/regresar-icon.png" /> <!-- Usa tu propia flecha -->
+                        <Image url="@imagenes/regresar-icon.png" />
                     </ImageView>
                 </graphic>
-                <tooltip>
-                    <Tooltip text="Volver al menú principal" />
-                </tooltip>
+                <tooltip><Tooltip text="Volver al menú principal" /></tooltip>
             </Button>
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
-            <!-- Barra de búsqueda -->
             <HBox alignment="CENTER_LEFT" spacing="10" styleClass="search-container">
-                <ImageView fitHeight="16" fitWidth="16" pickOnBounds="true" preserveRatio="true">
-                    <Image url="@imagenes/icono_buscar.png"/>
+                <ImageView fitHeight="16" fitWidth="16" preserveRatio="true">
+                    <Image url="@imagenes/icono_buscar.png" />
                 </ImageView>
-                <TextField promptText="Buscar trabajos..." styleClass="search-field"/>
+                <TextField promptText="Buscar trabajos..." styleClass="search-field" />
             </HBox>
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
-            <!-- Iconos de notificaciones y postulaciones -->
             <Button onAction="#mostrarNotificaciones" styleClass="icon-button">
                 <graphic>
                     <ImageView fitHeight="32" fitWidth="32">
-                        <Image url="@imagenes/icono_notificaciones.png"/>
+                        <Image url="@imagenes/icono_notificaciones.png" />
                     </ImageView>
                 </graphic>
             </Button>
@@ -54,93 +43,90 @@
             <Button onAction="#mostrarPostulaciones" styleClass="icon-button">
                 <graphic>
                     <ImageView fitHeight="32" fitWidth="32">
-                        <Image url="@imagenes/icono_postulaciones.png"/>
+                        <Image url="@imagenes/icono_postulaciones.png" />
                     </ImageView>
                 </graphic>
             </Button>
         </HBox>
     </top>
 
+    <!-- Contenido central -->
     <center>
-        <AnchorPane stylesheets="@css/perfil.css" styleClass="root">
+        <AnchorPane prefHeight="470.0" prefWidth="1100.0" styleClass="root">
 
-            <!-- Header con foto de perfil -->
-            <HBox styleClass="header-box" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-                <children>
-                    <ImageView fitHeight="80" fitWidth="80" preserveRatio="true" styleClass="profile-image">
-                        <image>
-                            <Image url="@imagenes/profile_placeholder.png" />
-                        </image>
-                    </ImageView>
-                    <VBox styleClass="header-info">
-                        <children>
-                            <Label styleClass="profile-name" text="Frank Figueroa Rodriguez" />
-                            <Label styleClass="profile-location" text="San Juan De Miraflores" />
-                            <HBox spacing="15">
-                                <children>
-                                    <Label styleClass="contact-info" text="frankfrodriguez12@gmail.com" />
-                                    <Label styleClass="contact-info" text="+51-950626070" />
-                                </children>
-                            </HBox>
-                        </children>
-                    </VBox>
-                </children>
+            <!-- Encabezado de perfil -->
+            <HBox alignment="TOP_CENTER" layoutX="14.0" prefHeight="121.0" prefWidth="1100.0" styleClass="header-box" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="-14.0" AnchorPane.topAnchor="0.0">
+                <ImageView fitHeight="80" fitWidth="80" preserveRatio="true" styleClass="profile-image">
+                    <image>
+                        <Image url="@imagenes/profile_placeholder.png" />
+                    </image>
+                </ImageView>
+                <VBox alignment="TOP_CENTER" prefHeight="121.0" prefWidth="378.0" styleClass="header-info">
+                    <Label styleClass="profile-name" text="Frank Figueroa Rodriguez" />
+                    <Label styleClass="profile-location" text="San Juan De Miraflores" />
+                    <HBox spacing="15">
+                        <Label alignment="TOP_CENTER" styleClass="contact-info" text="frankfrodriguez12@gmail.com" />
+                        <Label styleClass="contact-info" text="+51-950626070" />
+                    </HBox>
+                </VBox>
             </HBox>
 
-                    <!-- Sección izquierda - Experiencias -->
+            <!-- Sección inferior -->
             <HBox spacing="20" styleClass="main-content" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="120">
-                <children>
-                    <VBox prefWidth="700" spacing="15" styleClass="content-panel">
-                        <children>
-                            <Label styleClass="section-title" text="Mis experiencias profesionales"/>
 
-                            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-content">
-                                <content>
-                                    <VBox fx:id="contenedorExperiencias" spacing="20" styleClass="experiences-container"/>
-                                </content>
-                            </ScrollPane>
+                <!-- Experiencias -->
+                <VBox prefWidth="700" spacing="15" styleClass="content-panel">
+               <HBox alignment="BOTTOM_LEFT" prefHeight="40.0" prefWidth="700.0">
+                  <children>
+                          <Label prefHeight="39.0" prefWidth="259.0" styleClass="section-title" text="Mis experiencias profesionales" />
+                     <Label prefHeight="15.0" prefWidth="384.0" />
+      
+                                <Button contentDisplay="BOTTOM" onAction="#mostrarVentanaExperiencia" prefHeight="23.0" prefWidth="55.0" styleClass="add-button" text="+ " />
+                  </children>
+               </HBox>
 
-                            <Button styleClass="add-button" onAction="#mostrarVentanaExperiencia" text="+ Añadir experiencia"/>
-                        </children>
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-content">
+                        <content>
+                            <VBox fx:id="contenedorExperiencias" spacing="20" styleClass="experiences-container" />
+                        </content>
+                    </ScrollPane>
+                </VBox>
+
+                <!-- Archivos + sugerencias -->
+                <VBox prefWidth="300" spacing="25" styleClass="side-panel">
+
+                    <!-- Archivos adjuntos -->
+                    <VBox alignment="TOP_LEFT" spacing="10" styleClass="attachment-box">
+                        <Label prefHeight="15.0" prefWidth="116.0" styleClass="section-subtitle" text="Archivos adjuntos" />
+
+                        <VBox spacing="6">
+                            <Hyperlink styleClass="file-link" text="Aponte_Diesel_CV.pdf" />
+                            <Hyperlink styleClass="file-link" text="Experiencia_Laboral.pdf" />
+                            <Hyperlink styleClass="file-link" text="Documentación.pdf" />
+                        </VBox>
+
+                        <Label styleClass="subtext-label" text="¿Deseas añadir más documentos?" />
+
+                        <Button alignment="CENTER_LEFT" onAction="#mostrarVentanaAdjuntarArchivo" styleClass="secondary-button" text="Adjuntar otro archivo" />
                     </VBox>
 
-                    <!-- Sección derecha - Archivos y sugerencias -->
-                    <VBox prefWidth="300" spacing="20" styleClass="side-panel">
-                        <children>
-                            <!-- Archivos adjuntos -->
-                            <VBox spacing="10" styleClass="attachment-box">
-                                <children>
-                                    <Label styleClass="section-subtitle" text="Archivos adjuntos" />
-                                    <Hyperlink styleClass="file-link" text="Aponte_Diesel_CV.pdf" />
-                                    <Hyperlink styleClass="file-link" text="Experiencia_Laboral.pdf" />
-                                    <Hyperlink styleClass="file-link" text="Documentación.pdf" />
-                                    <Button styleClass="secondary-button" onAction="#mostrarVentanaAdjuntarArchivo" text="Adjuntar otro archivo" />
-                                </children>
-                            </VBox>
+                    <Separator />
 
-                            <!-- Sugerencias -->
-                            <VBox spacing="15" styleClass="suggestions-box">
-                                <children>
-                                    <Label styleClass="section-subtitle" text="Sugerencias" />
-                                    <VBox styleClass="suggestion-item">
-                                        <children>
-                                            <Label styleClass="suggestion-title" text="¿Quieres potenciar tu CV?" />
-                                            <Hyperlink styleClass="suggestion-link" text="Mira el siguiente video" />
-                                        </children>
-                                    </VBox>
+                    <!-- Sugerencias -->
+                    <VBox spacing="15" styleClass="suggestions-box">
+                        <Label styleClass="section-subtitle" text="Sugerencias" />
 
-                                    <VBox styleClass="suggestion-item">
-                                        <children>
-                                            <Label styleClass="suggestion-title" text="¿Quieres revisar los últimos trabajos sin requerimientos de experiencia?" wrapText="true" />
-                                            <Hyperlink styleClass="suggestion-link" text="Explorar oportunidades" />
-                                        </children>
-                                    </VBox>
-                                </children>
-                            </VBox>
-                        </children>
+                        <VBox styleClass="suggestion-item">
+                            <Label styleClass="suggestion-title" text="¿Quieres potenciar tu CV?" />
+                            <Hyperlink styleClass="suggestion-link" text="Mira el siguiente video" />
+                        </VBox>
+
+                        <VBox styleClass="suggestion-item">
+                            <Label styleClass="suggestion-title" text="¿Quieres revisar los últimos trabajos sin requerimientos de experiencia?" wrapText="true" />
+                            <Hyperlink styleClass="suggestion-link" text="Explorar oportunidades" />
+                        </VBox>
                     </VBox>
-
-                </children>
+                </VBox>
             </HBox>
         </AnchorPane>
     </center>

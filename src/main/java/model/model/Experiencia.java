@@ -4,14 +4,16 @@ import java.time.LocalDate;
 
 public class Experiencia {
     private int id;
+    private int profileId;
     private String puesto;
     private String empresa;
     private String descripcion;
     private LocalDate fechaInicio;
     private LocalDate fechaFin;
 
-    public Experiencia(int id, String puesto, String empresa, String descripcion, LocalDate fechaInicio, LocalDate fechaFin) {
+    public Experiencia(int id, int usuarioId, String puesto, String empresa, String descripcion, LocalDate fechaInicio, LocalDate fechaFin) {
         this.id = id;
+        this.profileId = usuarioId;
         this.puesto = puesto;
         this.empresa = empresa;
         this.descripcion = descripcion;
@@ -25,6 +27,14 @@ public class Experiencia {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int usuarioId) {
+        this.profileId = usuarioId;
     }
 
     public String getPuesto() {
