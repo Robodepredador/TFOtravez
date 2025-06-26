@@ -14,37 +14,32 @@ import javafx.stage.Stage;
 import model.model.Experiencia;
 import model.model.Usuario;
 import model.repository.ExperienciaRepository;
-import model.repository.ExperienciaRepositoryImpl;
-import model.repository.DataBaseConecction;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.List;
 
 public class PerfilController {
 
     /* ---------- FXML ---------- */
     @FXML private ImageView profileImage;
-    @FXML private Label lblNombreUsuario, lblDistritoUsuario, lblCorreo, lblTelefono;
+    @FXML private Label lblNombreUsuario, lblDistritoUsuario, lblCorreo;
     @FXML private VBox contenedorExperiencias;
 
-    /* ---------- Repositorio ---------- */
-    private final ExperienciaRepository experienciaRepo;
-
-    /* ---------- Usuario actual ---------- */
+    /* ---------- Inyectados ---------- */
+    private ExperienciaRepository experienciaRepo;
     private Usuario usuarioActual;
 
-    public PerfilController() {
-        Connection conn = DataBaseConecction.getInstance().getConnection();
-        this.experienciaRepo = new ExperienciaRepositoryImpl(conn);
-    }
-
-    /* ---------- Inicialización ---------- */
+    /* ---------- Inicialización de JavaFX ---------- */
     @FXML
     private void initialize() {
-        usuarioActual = obtenerUsuarioDesdeSesion();      // reemplaza por tu sesión real
+    }
+
+    /* ---------- Método de inyección desde SceneManager ---------- */
+    public void init(Usuario usuario, ExperienciaRepository experienciaRepo) {
+        this.usuarioActual = usuario;
+        this.experienciaRepo = experienciaRepo;
+
         cargarDatosPerfil();
-        actualizarListaExperiencias();
     }
 
     /* =======================================================================
@@ -52,31 +47,29 @@ public class PerfilController {
        ======================================================================= */
 
     @FXML private void mostrarMainMenu() {
-
+        // Implementar navegación si es necesario
     }
 
     @FXML private void mostrarNotificaciones() {
-        // TODO: cargar vista de notificaciones
         System.out.println("Abrir notificaciones");
     }
 
     @FXML private void mostrarPostulaciones() {
-        // TODO: cargar vista de postulaciones
         System.out.println("Abrir postulaciones");
     }
 
     @FXML private void mostrarVentanaAdjuntarArchivo() {
-    try{
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/org/example/bolsalaboralapp/adjuntar--view.fxml"));
-        Parent root =loader.load();
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/org/example/bolsalaboralapp/adjuntar--view.fxml"));
+            Parent root = loader.load();
 
-        AñadirArchivoController popup = loader.getController();
-        popup.initialize();
+            AñadirArchivoController popup = loader.getController();
+            popup.initialize();
 
-    }catch (IOException e){
-        e.printStackTrace();
-    }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /* ---------- Popup “+ Añadir experiencia” ---------- */
@@ -100,39 +93,8 @@ public class PerfilController {
         }
     }
 
-    /* =======================================================================
-       REFRESCAR EXPERIENCIAS
-       ======================================================================= */
-    public void actualizarListaExperiencias() {
-        contenedorExperiencias.getChildren().clear();
-        List<Experiencia> lista = experienciaRepo.listarPorUsuario(usuarioActual.getId());
-        for (Experiencia exp : lista) {
-            contenedorExperiencias.getChildren().add(crearTarjetaExperiencia(exp));
-        }
-    }
 
-    private HBox crearTarjetaExperiencia(Experiencia exp) {
-        HBox tarjeta = new HBox(10);
-        tarjeta.getStyleClass().add("experience-box");
 
-        Label lblPuesto  = new Label(exp.getPuesto() + " - " + exp.getEmpresa());
-        lblPuesto.getStyleClass().add("job-title");
-
-        Label lblPeriodo = new Label(exp.getFechaInicio() + " a " + exp.getFechaFin());
-        lblPeriodo.getStyleClass().add("job-period");
-
-        Button btnEliminar = new Button();
-        btnEliminar.getStyleClass().add("delete-icon-button");
-        btnEliminar.setGraphic(new ImageView(
-                new Image(getClass().getResourceAsStream("/imagenes/trash-icon.png"))));
-        btnEliminar.setOnAction(e -> {
-            experienciaRepo.eliminar(exp.getId());
-            actualizarListaExperiencias();
-        });
-
-        tarjeta.getChildren().addAll(lblPuesto, lblPeriodo, btnEliminar);
-        return tarjeta;
-    }
 
     /* =======================================================================
        DATOS DE PERFIL
@@ -140,15 +102,6 @@ public class PerfilController {
     private void cargarDatosPerfil() {
         lblNombreUsuario.setText(usuarioActual.getNombreCompleto());
         lblCorreo.setText(usuarioActual.getCorreo());
-    }
-
-    private Usuario obtenerUsuarioDesdeSesion() {
-        // Mock temporal
-        return new Usuario(
-                1,
-                "Frank Figueroa Rodriguez",
-                "frankfrodriguez12@gmail.com",
-                "+51-950626070"
-        );
+        lblDistritoUsuario.setText("San Juan De Miraflores");
     }
 }

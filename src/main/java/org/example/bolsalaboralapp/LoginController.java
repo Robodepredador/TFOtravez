@@ -4,56 +4,95 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import model.repository.UsuarioRepository;
-import model.repository.UsuarioRepositoryImpl;
-import model.repository.DataBaseConecction;
+import model.model.Perfil;
+import model.model.Usuario;
+import model.repository.*;
+import model.service.StartupService;
 
 import java.sql.Connection;
+import java.util.Optional;
 
 public class LoginController {
 
-    /* ---------- FXML ---------- */
-    @FXML private TextField      campoUsuario;
-    @FXML private PasswordField  campoContrasena;
+    @FXML private TextField campoUsuario;
+    @FXML private PasswordField campoContrasena;
 
-    /* ---------- Repositorio de usuarios ---------- */
-    private final UsuarioRepository usuarioRepo;
+    private UsuarioRepository usuarioRepo;
+    private PerfilRepository perfilRepo;
 
     public LoginController() {
         Connection conn = DataBaseConecction.getInstance().getConnection();
         this.usuarioRepo = new UsuarioRepositoryImpl(conn);
     }
 
-    /* ------------------------------------------------------------------
-       MÉTODOS VINCULADOS DESDE login-view.fxml
-       ------------------------------------------------------------------ */
+    public void setUsuarioRepository(UsuarioRepository usuarioRepo) {
+        this.usuarioRepo = usuarioRepo;
+    }
 
-    /** Botón “Ingresar” → validar y pasar al menú principal */
+    public void setPerfilRepository(PerfilRepository perfilRepo) {
+        this.perfilRepo = perfilRepo;
+    }
+
     @FXML
     private void mostrarMainMenu() {
         String user = campoUsuario.getText();
         String pwd  = campoContrasena.getText();
 
         if (usuarioRepo.verificarCredenciales(user, pwd)) {
-            // ⇒ Navegar a la pantalla principal
+            int usuarioId = usuarioRepo.obtenerIdUsuarioPorCorreo(user);
+
+            var usuarioOpt = usuarioRepo.buscarPorId(usuarioId);
+            if (usuarioOpt.isEmpty()) {
+                new Alert(Alert.AlertType.ERROR, "⚠ No se encontró al usuario.").showAndWait();
+                return;
+            }
+
+            Usuario usuario = usuarioOpt.get();
+
+            // Conexión compartida
+            Connection conn = DataBaseConecction.getInstance().getConnection();
+
+            // Repositorios
+            TrabajoRepository trabajoRepo = new TrabajoRepositoryImpl(conn);
+            ExperienciaRepository experienciaRepo = new ExperienciaRepositoryImpl(conn);
+            UsuarioRepository usuarioRepo = new UsuarioRepositoryImpl(conn);
+            PostulacionRepository postulacionRepo = new PostulacionRepositoryImpl(usuarioRepo, trabajoRepo);
+
+            // Cambiar a vista principal
             SceneManager.cambiarVista(
-                    "/org/example/bolsalaboralapp/main-view.fxml",         // Ruta constante
-                    "Bolsa Laboral – Inicio");
+                    "/org/example/bolsalaboralapp/main-view.fxml",
+                    "Bolsa Laboral – Inicio",
+                    (MainController controller) -> {
+                        controller.setRepositorios(
+                                trabajoRepo,
+                                experienciaRepo,
+                                postulacionRepo,
+                                usuarioRepo,
+                                usuario
+                        );
+                    }
+            );
         } else {
             new Alert(Alert.AlertType.ERROR,
                     "Usuario o contraseña incorrectos").showAndWait();
         }
     }
 
-    /** Botón “Crear cuenta” → cambiar a pantalla de registro */
+
     @FXML
     private void mostrarCreateAccount() {
+        Connection conn = DataBaseConecction.getInstance().getConnection();
+        UsuarioRepository usuarioRepo = new UsuarioRepositoryImpl(conn);
+        PerfilRepository perfilRepo = new PerfilRepositoryImpl(usuarioRepo); // ← CORRECTO
+
         SceneManager.cambiarVista(
-                "/org/example/bolsalaboralapp/createAccount-view.fxml",        // Ruta a createAccount-view.fxml
-                "Crear nueva cuenta");
+                "/org/example/bolsalaboralapp/createAccount-view.fxml",
+                "Crear cuenta",
+                (CreateAccountController controller) -> {
+                    controller.setPerfilRepository(perfilRepo);
+                }
+        );
     }
-
-
 
 
 }

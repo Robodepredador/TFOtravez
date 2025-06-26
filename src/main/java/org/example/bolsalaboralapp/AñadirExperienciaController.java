@@ -33,7 +33,7 @@ public class AñadirExperienciaController {
         if (!validar()) return;
 
         repo.guardar(new ConcreteExperienciaBuilder()
-                .setProfileId(usuarioId)                       // nombre correcto
+                .setProfileId(usuarioId)
                 .setPosition(campoPuesto.getText())
                 .setCompany(campoEmpresa.getText())
                 .setDescription(campoDescripcion.getText())
@@ -41,7 +41,6 @@ public class AñadirExperienciaController {
                 .setFechaFin(campoFechaFin.getValue())
                 .build());
 
-        perfilController.actualizarListaExperiencias();        // refresca vista principal
         cerrarVentana();
     }
 

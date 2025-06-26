@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UsuarioRepository {
+    int obtenerIdUsuarioPorCorreo(String correo);
     boolean guardar(Usuario usuario);
     Optional<Usuario> buscarPorId(int id);
     Optional<Usuario> buscarPorNombreUsuario(String username);

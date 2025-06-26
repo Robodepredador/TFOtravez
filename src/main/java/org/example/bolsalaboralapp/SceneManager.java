@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class SceneManager {
 
@@ -20,16 +21,29 @@ public class SceneManager {
     }
 
     /**
-     * Cambia la vista actual y guarda el controlador
+     * Cambia la vista actual y guarda el controlador.
      */
     public static void cambiarVista(String fxmlPath, String title) {
+        cambiarVista(fxmlPath, title, null);
+    }
+
+    /**
+     * Cambia la vista actual, guarda el controlador y permite configurarlo al cargar.
+     */
+    public static <T> void cambiarVista(String fxmlPath, String title, Consumer<T> controllerInitializer) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
             Parent root = loader.load();
 
-            // Guardar el controlador
-            controllers.put(fxmlPath, loader.getController());
+            T controller = loader.getController();
+            controllers.put(fxmlPath, controller);
 
+            // Inicializar el controlador si se proporcionó un Consumer
+            if (controllerInitializer != null && controller != null) {
+                controllerInitializer.accept(controller);
+            }
+
+            // Crear el Stage si no existe
             if (primaryStage == null) {
                 primaryStage = new Stage();
             }
@@ -37,21 +51,22 @@ public class SceneManager {
             primaryStage.setTitle(title);
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
+
         } catch (IOException e) {
-            System.err.println("Error al cargar la vista: " + fxmlPath);
+            System.err.println("Error al cargar la vista con inicialización: " + fxmlPath);
             e.printStackTrace();
         }
     }
 
     /**
-     * Obtiene un controlador previamente cargado
+     * Obtiene un controlador previamente cargado.
      */
     public static <T> T getController(String fxmlPath) {
         return (T) controllers.get(fxmlPath);
     }
 
     /**
-     * Carga una vista en un nuevo Stage (modal)
+     * Carga una vista en un nuevo Stage (modal).
      */
     public static void cargarVistaModal(String fxmlPath, String title) {
         try {
@@ -69,6 +84,3 @@ public class SceneManager {
         }
     }
 }
-
-
-

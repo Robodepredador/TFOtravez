@@ -6,25 +6,17 @@ public class Trabajo {
     private int id;
     private String titulo;
     private String descripcion;
-    private String tipo; // Ej: "Remoto", "Presencial"
+    private String categoria;
     private String experienciaRequerida;
-    private String sueldo;
+    private double sueldo;
 
-    public Trabajo(int id, String titulo, String descripcion, String tipo, String experienciaRequerida, String sueldo) {
+    public Trabajo(int id, String titulo, String descripcion, String categoria, String experienciaRequerida, double sueldo) {
         this.id = id;
         this.titulo = titulo;
         this.descripcion = descripcion;
-        this.tipo = tipo;
+        this.categoria = categoria;
         this.experienciaRequerida = experienciaRequerida;
         this.sueldo = sueldo;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitulo() {
@@ -35,20 +27,20 @@ public class Trabajo {
         this.titulo = titulo;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 
     public String getExperienciaRequerida() {
@@ -59,11 +51,19 @@ public class Trabajo {
         this.experienciaRequerida = experienciaRequerida;
     }
 
-    public String getSueldo() {
+    public double getSueldo() {
         return sueldo;
     }
 
-    public void setSueldo(String sueldo) {
+    public void setSueldo(double sueldo) {
         this.sueldo = sueldo;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 }

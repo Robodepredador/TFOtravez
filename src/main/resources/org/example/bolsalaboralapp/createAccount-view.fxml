@@ -1,78 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.bolsalaboralapp.CreateAccountController"
-            stylesheets="@css/createAccount.css">
+<!-- 1️⃣  Un solo StackPane que ocupa toda la escena -->
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.example.bolsalaboralapp.CreateAccountController"
+           stylesheets="@css/createAccount.css"
+           alignment="CENTER">
 
-    <!-- Fondo blanco completo -->
-    <StackPane style="-fx-background-color: #FFFFFF;"
-               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <!-- 2️⃣  Tu tarjeta de registro -->
+    <VBox fx:id="registerBox"
+          alignment="CENTER"
+          spacing="15"
+          maxWidth="350"
+          styleClass="register-container">
 
-        <!-- Contenedor principal con sombra y borde -->
-        <VBox alignment="CENTER" styleClass="register-container">
+        <!-- Título -->
+        <Label text="Crear Nueva Cuenta" styleClass="register-title">
+            <font><Font name="System Bold" size="20"/></font>
+            <VBox.margin><Insets bottom="20"/></VBox.margin>
+        </Label>
 
-            <!-- Encabezado -->
-            <Label styleClass="register-title" text="Crear Nueva Cuenta">
-                <font>
-                    <Font name="System Bold" size="20.0" />
-                </font>
-                <VBox.margin>
-                    <Insets bottom="20"/>
-                </VBox.margin>
-            </Label>
+        <!-- Formulario -->
+        <GridPane hgap="10" vgap="15" alignment="CENTER" styleClass="form-grid">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="120"/>
+                <ColumnConstraints prefWidth="200"/>
+            </columnConstraints>
 
-            <!-- Formulario -->
-            <GridPane alignment="CENTER" hgap="10" styleClass="form-grid" vgap="15">
-                <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="250.0" />
-                </columnConstraints>
+            <!-- Nombre -->
+            <Label text="Nombre:"          styleClass="form-label"
+                   GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtNuevoUsuario"   promptText="Ej: Juan Pérez"
+                       styleClass="form-field"
+                       GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                <Label text="Nombre:"        GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="form-label"/>
-                <TextField fx:id="txtNuevoUsuario" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                           promptText="Ej: Juan Pérez" styleClass="form-field"/>
+            <!-- Correo -->
+            <Label text="Correo:"          styleClass="form-label"
+                   GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtCorreo"   promptText="usuario@correo"
+                       styleClass="form-field"
+                       GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                <Label text="Correo:"         GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="form-label"/>
-                <TextField fx:id="txtCorreo"  GridPane.columnIndex="1" GridPane.rowIndex="1"
-                           promptText="usuario@correo" styleClass="form-field"/>
+            <!-- Contraseña -->
+            <Label text="Contraseña:"      styleClass="form-label"
+                   GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <PasswordField fx:id="txtNuevaContraseña" promptText="Mínimo 8 caracteres"
+                           styleClass="form-field"
+                           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-                <Label text="Contraseña:"          GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="form-label"/>
-                <PasswordField fx:id="txtNuevaContraseña" GridPane.columnIndex="1" GridPane.rowIndex="2"
-                               promptText="Mínimo 8 caracteres" styleClass="form-field"/>
+            <!-- Confirmar -->
+            <Label text="Confirmar:"       styleClass="form-label"
+                   GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <PasswordField fx:id="txtConfirmarContraseña"  promptText="Repite tu contraseña"
+                           styleClass="form-field"
+                           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+        </GridPane>
 
-                <Label text="Confirmar:"           GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="form-label"/>
-                <PasswordField fx:id="txtConfirmarContraseña" GridPane.columnIndex="1" GridPane.rowIndex="3"
-                               promptText="Repite tu contraseña" styleClass="form-field"/>
+        <!-- Botones -->
+        <HBox alignment="CENTER" spacing="20" styleClass="button-container">
+            <Button text="Registrarse" prefWidth="120"
+                    styleClass="register-button"
+                    onAction="#registrarse"/>
+            <Button text="Volver"       prefWidth="120"
+                    styleClass="register-back-button"
+                    onAction="#volverALogin"/>
+            <HBox.margin><Insets top="20"/></HBox.margin>
+        </HBox>
 
-                <rowConstraints>
-                    <RowConstraints />
-                    <RowConstraints />
-                    <RowConstraints />
-                </rowConstraints>
-            </GridPane>
+        <!-- Aviso -->
+        <Label text="Todos los campos son obligatorios"
+               styleClass="register-hint">
+            <VBox.margin><Insets top="20"/></VBox.margin>
+        </Label>
+    </VBox>
 
-            <!-- Botones -->
-            <HBox alignment="CENTER" spacing="20" styleClass="button-container">
-                <Button prefWidth="120" onAction="#registrarse" styleClass="register-button" text="Registrarse" />
-                <Button  prefWidth="120" onAction="#volverALogin" styleClass="register-back-button" text="Volver" />
-                <HBox.margin>
-                    <Insets top="20"/>
-                </HBox.margin>
-            </HBox>
-
-            <!-- Mensaje adicional -->
-            <Label styleClass="register-hint" text="Todos los campos son obligatorios">
-                <VBox.margin>
-                    <Insets top="20"/>
-                </VBox.margin>
-            </Label>
-        </VBox>
-    </StackPane>
-</AnchorPane>
+</StackPane>

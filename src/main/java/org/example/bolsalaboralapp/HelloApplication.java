@@ -10,14 +10,9 @@ import java.io.IOException;
 
 public class HelloApplication extends Application {
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/bolsalaboralapp/login-view.fxml"));
-        Parent root = loader.load();
-
+    public void start(Stage primaryStage) {
         SceneManager.setPrimaryStage(primaryStage);
-        primaryStage.setTitle("Bolsa Laboral");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+        SceneManager.cambiarVista("login-view.fxml", "Iniciar sesión");
     }
 
     public static void main(String[] args) {

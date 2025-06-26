@@ -62,13 +62,12 @@
                     </image>
                 </ImageView>
                 <VBox alignment="TOP_CENTER" prefHeight="121.0" prefWidth="378.0" styleClass="header-info">
-                    <Label styleClass="profile-name" text="Frank Figueroa Rodriguez" />
-                    <Label styleClass="profile-location" text="San Juan De Miraflores" />
-                    <HBox spacing="15">
-                        <Label alignment="TOP_CENTER" styleClass="contact-info" text="frankfrodriguez12@gmail.com" />
-                        <Label styleClass="contact-info" text="+51-950626070" />
-                    </HBox>
+                <Label fx:id="lblNombreUsuario" styleClass="profile-name" />
+                <Label fx:id="lblDistritoUsuario" styleClass="profile-location" />
                 </VBox>
+                <HBox spacing="15">
+                    <Label fx:id="lblCorreo" alignment="TOP_CENTER" styleClass="contact-info" />
+                </HBox>
             </HBox>
 
             <!-- Sección inferior -->

@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane stylesheets="@css/login.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.bolsalaboralapp.LoginController">
-   <StackPane style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <BorderPane style="-fx-background-color: transparent;">
-         <center>
-            <VBox alignment="CENTER" spacing="15" styleClass="login-container">
-               <ImageView fitHeight="124" fitWidth="219" pickOnBounds="true" preserveRatio="true">
-                  <VBox.margin>
-                     <Insets bottom="20"/>
-                  </VBox.margin>
-                  <image>
-                     <Image url="@imagenes/Icono_logeo-removebg-preview.png"/>
-                  </image>
-               </ImageView>
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.example.bolsalaboralapp.LoginController"
+           stylesheets="@css/login.css"
+           alignment="CENTER">
 
-               <Label styleClass="login-label" text="Usuario"/>
-               <TextField fx:id="campoUsuario" styleClass="login-field" maxWidth="250.0" prefWidth="250.0"/>
+   <VBox fx:id="loginBox"
+         alignment="CENTER" spacing="15"
+         maxWidth="300"
+   styleClass="login-container">
 
-               <Label styleClass="login-label" text="Contraseña"/>
-               <PasswordField fx:id="campoContrasena" styleClass="login-field" maxWidth="250.0" prefWidth="250.0"/>
+   <ImageView fitHeight="124" fitWidth="219" preserveRatio="true">
+      <VBox.margin><Insets bottom="20"/></VBox.margin>
+      <image><Image url="@imagenes/Icono_logeo-removebg-preview.png"/></image>
+   </ImageView>
 
-               <CheckBox fx:id="checkRecordar" styleClass="login-checkbox" text="Recordar contraseña"/>
+   <Label text="Usuario" styleClass="login-label"/>
+   <TextField fx:id="campoUsuario" maxWidth="250" styleClass="login-field"/>
 
-               <Button fx:id="botonIngresar" styleClass="login-button" onAction="#mostrarMainMenu" text="Ingresar" maxWidth="150.0"/>
-               <Button fx:id="botonCrearCuenta" styleClass="crear-cuenta-button" onAction="#mostrarCreateAccount" text="Crear cuenta" maxWidth="150.0"/>
-            </VBox>
-         </center>
-      </BorderPane>
-   </StackPane>
-</AnchorPane>
+   <Label text="Contraseña" styleClass="login-label"/>
+   <PasswordField fx:id="campoContrasena" maxWidth="250" styleClass="login-field"/>
+
+   <CheckBox fx:id="checkRecordar" text="Recordar contraseña" styleClass="login-checkbox"/>
+
+   <Button fx:id="botonIngresar"
+           text="Ingresar"
+           maxWidth="150"
+           styleClass="login-button"
+           onAction="#mostrarMainMenu"/>
+
+   <Button fx:id="botonCrearCuenta"
+           text="Crear cuenta"
+           maxWidth="150"
+           styleClass="crear-cuenta-button"
+           onAction="#mostrarCreateAccount"/>
+</VBox>
+
+        </StackPane>

@@ -17,7 +17,7 @@ public class ExperienciaRepositoryImpl implements ExperienciaRepository {
     public void guardar(Experiencia experiencia) {
         String sql = "INSERT INTO experiencia (usuario_id, puesto, empresa, descripcion, fecha_inicio, fecha_fin) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, experiencia.getProfileId());
+            stmt.setInt(1, experiencia.getUsuarioId());
             stmt.setString(2, experiencia.getPuesto());
             stmt.setString(3, experiencia.getEmpresa());
             stmt.setString(4, experiencia.getDescripcion());

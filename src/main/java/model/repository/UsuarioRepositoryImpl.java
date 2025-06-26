@@ -45,9 +45,9 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
             if (rs.next()) {
                 Usuario usuario = new Usuario(
                         rs.getInt("id"),
-                        rs.getString("nombre_usuario"),
                         rs.getString("correo"),
-                        rs.getString("contrasena")
+                        rs.getString("password"),
+                        rs.getString("nombre")
                 );
                 return Optional.of(usuario);
             }
@@ -58,17 +58,17 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     }
 
     @Override
-    public Optional<Usuario> buscarPorNombreUsuario(String username) {
-        String sql = "SELECT * FROM usuario WHERE nombre_usuario = ?";
+    public Optional<Usuario> buscarPorNombreUsuario(String correo) {
+        String sql = "SELECT * FROM usuario WHERE correo = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, username);
+            stmt.setString(1, correo.trim());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Usuario usuario = new Usuario(
                         rs.getInt("id"),
-                        rs.getString("nombre_usuario"),
                         rs.getString("correo"),
-                        rs.getString("contrasena")
+                        rs.getString("password"),
+                        rs.getString("nombre")
                 );
                 return Optional.of(usuario);
             }
@@ -87,9 +87,9 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
             while (rs.next()) {
                 usuarios.add(new Usuario(
                         rs.getInt("id"),
-                        rs.getString("nombre_usuario"),
                         rs.getString("correo"),
-                        rs.getString("contrasena")
+                        rs.getString("password"),
+                        rs.getString("nombre")
                 ));
             }
         } catch (SQLException e) {
@@ -102,13 +102,29 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     public boolean verificarCredenciales(String correo, String password) {
         String sql = "SELECT * FROM usuario WHERE correo = ? AND password = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, correo);
-            stmt.setString(2, password);
+            stmt.setString(1, correo.trim());
+            stmt.setString(2, password.trim());
             ResultSet rs = stmt.executeQuery();
             return rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public int obtenerIdUsuarioPorCorreo(String correo) {
+        try {
+            String sql = "SELECT id FROM usuario WHERE correo = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, correo);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

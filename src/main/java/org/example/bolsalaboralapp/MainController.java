@@ -1,120 +1,217 @@
 package org.example.bolsalaboralapp;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import model.model.Perfil;
+import model.model.Postulacion;
 import model.model.Trabajo;
+import model.model.Usuario;
+import model.observer.FiltroObservableService;
+import model.observer.TrabajoFiltradoService;
 import model.repository.*;
+import model.strategy.*;
 
-import java.sql.Connection;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class MainController {
 
-    /* ---------- FXML (de main-view.fxml) ---------- */
+    // Filtros
+    @FXML private CheckBox cbConstruccion, cbVentas, cbTransporte, cbMudanzas;
+    @FXML private CheckBox cbUnAnio, cbDosCinco, cbSeisOMas;
+    @FXML private CheckBox cbSueldo950, cbSueldo1025, cbSueldo1200;
+    @FXML private Button btnActualizarBusqueda;
+
+    // Panel trabajos y detalle
     @FXML private ListView<Trabajo> jobsListView;
-    @FXML private Label lblJobTitle;
-    @FXML private Label lblJobCompany;
-    @FXML private Label lblJobLocation;
-    @FXML private TextArea txtJobDescription;
+    @FXML private Label lblTitulo, lblEmpresa, lblUbicacion;
+    @FXML private TextArea txtDescripcion;
     @FXML private VBox jobInfoBox;
 
-    /* ---------- Dependencias ---------- */
-    private final UsuarioRepository usuarioRepo;
-    private final TrabajoRepository trabajoRepo;
+    // Servicios
+    private FiltroObservableService filtroService;
+    private TrabajoFiltradoService trabajoFiltradoService;
+    private TrabajoRepository trabajoRepository;
+    private ExperienciaRepository experienciaRepository;
+    private PostulacionRepository postulacionRepository;
+    private UsuarioRepository usuarioRepository;
 
-    public MainController() {
-        Connection conn = DataBaseConecction.getInstance().getConnection();
-        this.usuarioRepo = new UsuarioRepositoryImpl(conn);
-        this.trabajoRepo = new TrabajoRepositoryImpl(conn);
+    private Usuario usuario; // usuario actual
+    private int perfilId;
+    private Usuario usuarioActual;
+
+
+    public void setRepositorios(TrabajoRepository trabajoRepo,
+                                ExperienciaRepository experienciaRepo,
+                                PostulacionRepository postulacionRepo,
+                                UsuarioRepository usuarioRepo,
+                                Usuario usuarioActual) {
+        this.trabajoRepository = trabajoRepo;
+        this.experienciaRepository = experienciaRepo;
+        this.postulacionRepository = postulacionRepo;
+        this.usuarioRepository = usuarioRepo;
+
+        this.usuarioActual = usuarioActual;
+        this.usuario = usuarioActual;
+
+        filtroService = new FiltroObservableService();
+
+        trabajoFiltradoService = new TrabajoFiltradoService(
+                trabajoRepository,
+                experienciaRepository,
+                usuarioActual.getId(),
+                this::actualizarVistaConTrabajos
+        );
+
+        filtroService.agregarObserver(trabajoFiltradoService);
+        configurarListView();
+        cargarTodosLosTrabajos();
     }
 
-    /* ---------- Inicialización ---------- */
-    @FXML
-    private void initialize() {
-        cargarTrabajos();
+    private void configurarListView() {
+        jobsListView.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Trabajo item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null :
+                        item.getTitulo() + " - " + item.getCategoria() + " - S/. " + item.getSueldo());
+            }
+        });
 
-        // actualizar panel derecho al seleccionar un trabajo
-        jobsListView.getSelectionModel().selectedItemProperty()
-                .addListener(new ChangeListener<>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Trabajo> obs,
-                                        Trabajo oldVal, Trabajo newVal) {
-                        if (newVal != null) mostrarDetalleTrabajo(newVal);
-                    }
-                });
+        jobsListView.setOnMouseClicked(this::mostrarDetalleTrabajo);
     }
 
-    /* ------------------------------------------------------------------
-       EVENT HANDLERS – llamados en main-view.fxml
-       ------------------------------------------------------------------ */
+    private void actualizarVistaConTrabajos(List<Trabajo> trabajos) {
+        jobsListView.getItems().setAll(trabajos);
+        if (!trabajos.isEmpty()) {
+            jobsListView.getSelectionModel().selectFirst();
+            mostrarDetalleTrabajo(null);
+        } else {
+            limpiarDetalleTrabajo();
+        }
+    }
+
+    private void mostrarDetalleTrabajo(MouseEvent event) {
+        Trabajo seleccionado = jobsListView.getSelectionModel().getSelectedItem();
+        if (seleccionado != null) {
+            lblTitulo.setText(seleccionado.getTitulo());
+            lblEmpresa.setText("Empresa: " + seleccionado.getDescripcion());
+            lblUbicacion.setText("Ubicación: " + seleccionado.getCategoria());
+            txtDescripcion.setText(seleccionado.getDescripcion());
+        }
+    }
+
+    private void limpiarDetalleTrabajo() {
+        lblTitulo.setText("Título del trabajo");
+        lblEmpresa.setText("Empresa");
+        lblUbicacion.setText("Ubicación");
+        txtDescripcion.clear();
+    }
+
+    private void cargarTodosLosTrabajos() {
+        List<Trabajo> trabajos = trabajoRepository.listarTodos();
+        actualizarVistaConTrabajos(trabajos);
+    }
+
     @FXML
-    private void mostrarPerfil() {
+    private void actualizarBusqueda() {
+        filtroService.limpiarFiltros();
+
+        if (cbConstruccion.isSelected()) filtroService.agregarFiltroCategoria(new ConstruccionStratagy());
+        if (cbVentas.isSelected()) filtroService.agregarFiltroCategoria(new VentasStrategy());
+        if (cbTransporte.isSelected()) filtroService.agregarFiltroCategoria(new TransporteStrategy());
+        if (cbMudanzas.isSelected()) filtroService.agregarFiltroCategoria(new MudanzaStrategy());
+
+        if (cbUnAnio.isSelected()) filtroService.agregarFiltroExperiencia(new MaxUnAnioTrabajoStrategy());
+        if (cbDosCinco.isSelected()) filtroService.agregarFiltroExperiencia(new DosACincoAniosTrabajoStrategy());
+        if (cbSeisOMas.isSelected()) filtroService.agregarFiltroExperiencia(new SeisOMasAniosTrabajoStrategy());
+
+        if (cbSueldo950.isSelected()) filtroService.agregarFiltroSalario(new SueldoBajoStrategy());
+        if (cbSueldo1025.isSelected()) filtroService.agregarFiltroSalario(new SueldoMedioStrategy());
+        if (cbSueldo1200.isSelected()) filtroService.agregarFiltroSalario(new SueldoAltoStrategy());
+
+        filtroService.notificar();
+    }
+
+    @FXML
+    private void postularme() {
+        Trabajo seleccionado = jobsListView.getSelectionModel().getSelectedItem();
+        if (seleccionado != null && usuarioActual != null) {
+            Postulacion nueva = new Postulacion(
+                    0,
+                    usuarioActual,
+                    seleccionado,
+                    LocalDate.now()
+            );
+
+            System.out.println("Guardando postulación con usuario ID: " + usuarioActual.getId());
+
+            postulacionRepository.guardar(nueva);
+
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setTitle("Postulación enviada");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Te has postulado a: " + seleccionado.getTitulo());
+            alerta.showAndWait();
+        } else {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Error");
+            error.setHeaderText(null);
+            error.setContentText("No se pudo realizar la postulación.");
+            error.showAndWait();
+        }
+    }
+
+    // Botones navegación
+    @FXML private void mostrarPerfil() {
         SceneManager.cambiarVista(
                 "/org/example/bolsalaboralapp/perfil-view.fxml",
-                "Perfil de usuario");
-    }
+                "Perfil de Usuario",
+                (PerfilController controller) -> {
+                    controller.init(usuario, experienciaRepository);
+                }
+        );    }
 
-    @FXML
-    private void mostrarNotificaciones() {
+    @FXML private void mostrarNotificaciones() {
         SceneManager.cambiarVista(
-                "/org/example/bolsalaboralapp/notificaciones-view.fxml",
-                "Notificaciones");
+                "notificaciones-view.fxml",
+                "Notificaciones",
+                (NotificacionesController controller) -> {
+                    controller.setDatos(
+                            trabajoRepository,
+                            experienciaRepository,
+                            postulacionRepository,
+                            usuarioRepository,
+                            usuarioActual
+                    );
+                }
+        );
     }
 
     @FXML
     private void mostrarPostulaciones() {
         SceneManager.cambiarVista(
-                "/org/example/bolsalaboralapp/postulaciones-view.fxml",
-                "Mis postulaciones");
-    }
-
-    /** Botón “Postularme” en el panel de detalle */
-    @FXML
-    private void postularme() {
-        Trabajo seleccionado = jobsListView.getSelectionModel().getSelectedItem();
-        if (seleccionado == null) {
-            new Alert(Alert.AlertType.INFORMATION,
-                    "Primero selecciona un trabajo de la lista").showAndWait();
-            return;
-        }
-
-        // Aquí iría la lógica real de postulación:
-        // 1. Guardar registro en PostulacionRepository
-        // 2. Mostrar confirmación
-        new Alert(Alert.AlertType.INFORMATION,
-                "¡Te has postulado al puesto «" + seleccionado.getTitulo() + "»!")
-                .showAndWait();
-    }
-
-    /* ------------------------------------------------------------------
-       LÓGICA INTERNA
-       ------------------------------------------------------------------ */
-    private void cargarTrabajos() {
-        List<Trabajo> lista = trabajoRepo.listarTodos();
-        jobsListView.getItems().setAll(lista);
-    }
-
-    private void mostrarDetalleTrabajo(Trabajo t) {
-        lblJobTitle.setText(t.getTitulo());
-        lblJobCompany.setText(t.getTipo());          // o campo empresa si lo agregas
-        lblJobLocation.setText("Presencial");        // placeholder: ajusta si guardas ubicación
-        txtJobDescription.setText(t.getDescripcion());
-
-        jobInfoBox.getChildren().clear();
-        jobInfoBox.getChildren().addAll(
-                new Label("• " + t.getExperienciaRequerida()),
-                new Label("• Sueldo: " + t.getSueldo())
+                "postulaciones-view.fxml",
+                "Mis Postulaciones",
+                (PostulacionesController controller) -> {
+                    controller.setDatos(
+                            postulacionRepository,
+                            usuarioRepository,
+                            trabajoRepository,
+                            experienciaRepository,
+                            usuarioActual.getId()
+                    );
+                }
         );
     }
 
+    private void mostrarError(String mensaje) {
+        Alert alerta = new Alert(Alert.AlertType.ERROR);
+        alerta.setTitle("Error");
+        alerta.setContentText(mensaje);
+        alerta.showAndWait();
+    }
 }
