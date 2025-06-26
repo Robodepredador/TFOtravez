@@ -94,6 +94,5 @@ public class PostulacionesController {
 
     @FXML
     private void mostrarPostulaciones() {
-        // Ya estás en esta vista
     }
 }

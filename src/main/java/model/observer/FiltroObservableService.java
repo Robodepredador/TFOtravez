@@ -13,16 +13,13 @@ public class FiltroObservableService {
     private final List<SalarioStrategy> salarioFilters = new ArrayList<>();
     private final List<ExperienciaStrategy> experienciaFilters = new ArrayList<>();
 
-    // Observadores
     public void agregarObserver(FiltroObserver o) {
         observers.add(o);
     }
-
     public void eliminarObserver(FiltroObserver o) {
         observers.remove(o);
     }
 
-    // Filtros de categoría
     public void agregarFiltroCategoria(CategoryStrategy filtro) {
         if (!categoriaFilters.contains(filtro)) {
             categoriaFilters.add(filtro);
@@ -35,7 +32,6 @@ public class FiltroObservableService {
         notificar();
     }
 
-    // Filtros de salario
     public void agregarFiltroSalario(SalarioStrategy filtro) {
         if (!salarioFilters.contains(filtro)) {
             salarioFilters.add(filtro);
@@ -48,7 +44,6 @@ public class FiltroObservableService {
         notificar();
     }
 
-    // Filtros de experiencia
     public void agregarFiltroExperiencia(ExperienciaStrategy filtro) {
         if (!experienciaFilters.contains(filtro)) {
             experienciaFilters.add(filtro);
@@ -61,7 +56,6 @@ public class FiltroObservableService {
         notificar();
     }
 
-    // Limpia todos los filtros activos
     public void limpiarFiltros() {
         categoriaFilters.clear();
         salarioFilters.clear();
@@ -82,7 +76,6 @@ public class FiltroObservableService {
         notificar();
     }
 
-    // Notifica a todos los observadores del cambio de estado
     public void notificar() {
         for (FiltroObserver o : observers) {
             o.update(categoriaFilters, salarioFilters, experienciaFilters);

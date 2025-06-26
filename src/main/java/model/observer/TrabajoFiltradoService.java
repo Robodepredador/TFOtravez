@@ -35,38 +35,27 @@ public class TrabajoFiltradoService implements FiltroObserver{
         List<Trabajo> trabajos = trabajoRepository.listarTodos();
         List<Experiencia> experienciasUsuario = experienciaRepository.listarPorUsuario(perfilId);
 
-// Aplicar filtros de categoría (OR)
         if (!categorias.isEmpty()) {
             trabajos = trabajos.stream()
                     .filter(t -> categorias.stream().anyMatch(f -> f.filter(List.of(t)).contains(t)))
                     .toList();
         }
 
-// Aplicar filtros de salario (OR)
         if (!salarios.isEmpty()) {
             trabajos = trabajos.stream()
                     .filter(t -> salarios.stream().anyMatch(f -> f.filter(List.of(t)).contains(t)))
                     .toList();
         }
 
-// Aplicar filtros de experiencia (OR)
         if (!experiencias.isEmpty()) {
             trabajos = trabajos.stream()
                     .filter(t -> experiencias.stream().anyMatch(f -> f.filter(List.of(t)).contains(t)))
                     .toList();
         }
 
-        // Filtro adicional: validar si usuario cumple la experiencia mínima requerida por cada trabajo
-//        trabajos = trabajos.stream()
-//                .filter(t -> experienciaCumple(t, experienciasUsuario))
-//                .toList();
-
         mostrarEnVista.accept(trabajos);
     }
 
-    /**
-     * Valida si el usuario tiene la experiencia suficiente para postular al trabajo.
-     */
     private boolean experienciaCumple(Trabajo trabajo, List<Experiencia> experienciasUsuario) {
         int totalAnios = experienciasUsuario.stream()
                 .mapToInt(exp -> {
@@ -83,9 +72,7 @@ public class TrabajoFiltradoService implements FiltroObserver{
         return totalAnios >= aniosRequeridos;
     }
 
-    /**
-     * Convierte el texto de experiencia requerida (ej. "2 años", "6+ años") a un número de años.
-     */
+
     private int extraerAniosRequeridos(String texto) {
         if (texto == null) return 0;
         String lower = texto.toLowerCase();

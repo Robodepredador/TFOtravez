@@ -9,8 +9,6 @@
 <BorderPane stylesheets="@css/jobs.css, @css/postulaciones.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="org.example.bolsalaboralapp.PostulacionesController">
 
-    <!-- Barra superior común -->
-    <!-- Barra superior simplificada -->
     <top>
         <HBox xmlns="http://javafx.com/javafx/17.0.12"
               xmlns:fx="http://javafx.com/fxml/1"
@@ -29,7 +27,6 @@
                     <Tooltip text="Volver al menú principal" />
                 </tooltip>
             </Button>
-            <!-- Icono de perfil -->
             <Button onAction="#mostrarPerfil" styleClass="icon-button">
                 <graphic>
                     <ImageView fitHeight="32" fitWidth="32">
@@ -40,7 +37,6 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Barra de búsqueda -->
             <HBox alignment="CENTER_LEFT" spacing="10" styleClass="search-container">
                 <ImageView fitHeight="16" fitWidth="16" pickOnBounds="true" preserveRatio="true">
                     <Image url="@imagenes/icono_buscar.png"/>
@@ -50,7 +46,6 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Iconos de notificaciones y postulaciones -->
             <Button onAction="#mostrarNotificaciones" styleClass="icon-button">
                 <graphic>
                     <ImageView fitHeight="32" fitWidth="32">
@@ -69,18 +64,13 @@
         </HBox>
     </top>
 
-
-    <!-- Contenido principal: lista de postulaciones -->
     <center>
         <VBox spacing="20" styleClass="main-content">
             <padding>
                 <Insets top="20" bottom="20" left="30" right="30" />
             </padding>
-
             <Label styleClass="section-title" text="Mis Postulaciones" />
-
             <ListView fx:id="listaPostulaciones" prefHeight="500" styleClass="applications-list">
-                <!-- Las postulaciones se cargarán desde el controlador -->
             </ListView>
         </VBox>
     </center>

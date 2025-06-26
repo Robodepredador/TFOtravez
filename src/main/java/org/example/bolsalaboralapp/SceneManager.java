@@ -20,16 +20,10 @@ public class SceneManager {
         primaryStage = stage;
     }
 
-    /**
-     * Cambia la vista actual y guarda el controlador.
-     */
     public static void cambiarVista(String fxmlPath, String title) {
         cambiarVista(fxmlPath, title, null);
     }
 
-    /**
-     * Cambia la vista actual, guarda el controlador y permite configurarlo al cargar.
-     */
     public static <T> void cambiarVista(String fxmlPath, String title, Consumer<T> controllerInitializer) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));
@@ -38,12 +32,10 @@ public class SceneManager {
             T controller = loader.getController();
             controllers.put(fxmlPath, controller);
 
-            // Inicializar el controlador si se proporcionó un Consumer
             if (controllerInitializer != null && controller != null) {
                 controllerInitializer.accept(controller);
             }
 
-            // Crear el Stage si no existe
             if (primaryStage == null) {
                 primaryStage = new Stage();
             }
@@ -58,16 +50,10 @@ public class SceneManager {
         }
     }
 
-    /**
-     * Obtiene un controlador previamente cargado.
-     */
     public static <T> T getController(String fxmlPath) {
         return (T) controllers.get(fxmlPath);
     }
 
-    /**
-     * Carga una vista en un nuevo Stage (modal).
-     */
     public static void cargarVistaModal(String fxmlPath, String title) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlPath));

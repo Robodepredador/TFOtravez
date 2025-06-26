@@ -17,18 +17,17 @@ public class AñadirArchivoController {
     private Button btnSeleccionarArchivo;
 
     @FXML
-    private Label lblNombreArchivo; // Corregí el nombre (antes tenía un typo)
+    private Label lblNombreArchivo;
 
     @FXML
     private ListView<File> listaArchivos;
 
     private Stage stage;
     private List<File> archivosSeleccionados = new ArrayList<>();
-    private File ultimoDirectorio = null; // Para recordar la última ubicación
+    private File ultimoDirectorio = null;
 
     @FXML
     public void initialize() {
-        // Configurar el ListView
         listaArchivos.setCellFactory(lv -> new ListCell<File>() {
             @Override
             protected void updateItem(File item, boolean empty) {
@@ -43,12 +42,10 @@ public class AñadirArchivoController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccionar archivos");
 
-        // Configurar directorio inicial si existe uno previo
         if (ultimoDirectorio != null && ultimoDirectorio.exists()) {
             fileChooser.setInitialDirectory(ultimoDirectorio);
         }
 
-        // Filtros para tipos de archivos (opcional)
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
                 "Documentos soportados", "*.pdf", "*.doc", "*.docx", "*.odt");
         fileChooser.getExtensionFilters().add(extFilter);
@@ -59,8 +56,6 @@ public class AñadirArchivoController {
             archivosSeleccionados.addAll(files);
             listaArchivos.getItems().setAll(archivosSeleccionados);
             lblNombreArchivo.setText(files.size() + " archivo(s) seleccionado(s)");
-
-            // Guardar la última ubicación para futuras selecciones
             ultimoDirectorio = files.get(0).getParentFile();
         }
     }
@@ -81,7 +76,7 @@ public class AñadirArchivoController {
     }
 
     public List<File> getArchivosSeleccionados() {
-        return new ArrayList<>(archivosSeleccionados); // Devolver copia
+        return new ArrayList<>(archivosSeleccionados);
     }
 
     private void cerrarVentana() {

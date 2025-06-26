@@ -15,7 +15,7 @@ public class DataBaseConecction {
             connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/bolsa_laboral_app",
                     "root",
-                    "karate1_");              // <-- tu password real
+                    "karate1_");
         } catch (Exception e) {
             throw new RuntimeException("No se pudo conectar a la BD", e);
         }

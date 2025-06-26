@@ -7,14 +7,11 @@
 
 <BorderPane stylesheets="@css/jobs.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.bolsalaboralapp.MainController">
 
-    <!-- Barra superior simplificada -->
     <top>
         <HBox styleClass="top-bar" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
             <padding>
                 <Insets bottom="10" left="15" right="15" top="10" />
             </padding>
-
-            <!-- Icono de perfil -->
             <Button onAction="#mostrarPerfil" styleClass="icon-button">
                 <graphic>
                     <ImageView fitHeight="32" fitWidth="32">
@@ -25,7 +22,6 @@
 
             <Region HBox.hgrow="ALWAYS" />
 
-            <!-- Barra de búsqueda -->
             <HBox alignment="CENTER_LEFT" spacing="10" styleClass="search-container">
                 <ImageView fitHeight="16" fitWidth="16" pickOnBounds="true" preserveRatio="true">
                     <Image url="@imagenes/icono_buscar.png" />
@@ -35,7 +31,6 @@
 
             <Region HBox.hgrow="ALWAYS" />
 
-            <!-- Iconos de notificaciones y postulaciones -->
             <Button onAction="#mostrarNotificaciones" styleClass="icon-button">
                 <graphic>
                     <ImageView fitHeight="32" fitWidth="32">
@@ -55,14 +50,12 @@
     </top>
 
 
-    <!-- Contenido principal -->
     <center>
         <HBox spacing="20" styleClass="main-content">
             <padding>
                 <Insets bottom="20" left="30" right="30" top="20" />
             </padding>
 
-            <!-- Panel de filtros (izquierda) -->
             <VBox maxWidth="257.0" minWidth="163.0" prefHeight="600.0" prefWidth="257.0" spacing="15" styleClass="filters-panel">
                 <Label styleClass="filter-section-title" text="Tipo" />
                 <VBox spacing="5" styleClass="filter-group">
@@ -90,16 +83,12 @@
             </VBox>
 
 
-
-            <!-- Lista de trabajos (centro) -->
             <VBox maxWidth="400" minWidth="300" prefHeight="600.0" prefWidth="389.0" spacing="15" styleClass="jobs-list-panel">
                 <Label styleClass="section-title" text="Puestos de Trabajo" />
                 <ListView fx:id="jobsListView" prefHeight="556.0" prefWidth="349.0" styleClass="jobs-list-view">
-                    <!-- Los items se cargarán dinámicamente -->
                 </ListView>
             </VBox>
 
-            <!-- Detalles del trabajo (derecha) -->
             <VBox spacing="15" styleClass="job-detail-panel" HBox.hgrow="ALWAYS">
                 <Label fx:id="lblTitulo" styleClass="job-title" text="Título del trabajo" />
                 <Label fx:id="lblEmpresa" styleClass="job-company" text="Empresa" />

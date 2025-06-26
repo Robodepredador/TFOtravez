@@ -10,14 +10,12 @@ public class NotificacionesController {
     @FXML
     private ListView<String> listaNotificaciones;
 
-    // Repositorios y usuario que necesitas para regresar a Main
     private TrabajoRepository trabajoRepository;
     private ExperienciaRepository experienciaRepository;
     private PostulacionRepository postulacionRepository;
     private UsuarioRepository usuarioRepository;
     private Usuario usuarioActual;
 
-    // Nuevo método para inyectar los datos desde MainController
     public void setDatos(TrabajoRepository trabajoRepo,
                          ExperienciaRepository experienciaRepo,
                          PostulacionRepository postulacionRepo,
@@ -64,7 +62,6 @@ public class NotificacionesController {
 
     @FXML
     private void mostrarNotificaciones() {
-        // Ya estás en notificaciones, esto podría omitirse o desactivarse.
     }
 
     @FXML

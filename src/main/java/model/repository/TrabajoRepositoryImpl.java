@@ -15,9 +15,6 @@ public class TrabajoRepositoryImpl implements TrabajoRepository {
         this.connection = connection;
     }
 
-    // =========================================================
-    // CRUD BÁSICO
-    // =========================================================
     @Override
     public void guardar(Trabajo trabajo) {
         String sql = "INSERT INTO trabajo (titulo, descripcion, categoria, experiencia_requerida, sueldo) VALUES (?, ?, ?, ?, ?)";
@@ -63,9 +60,6 @@ public class TrabajoRepositoryImpl implements TrabajoRepository {
         return trabajos;
     }
 
-    // =========================================================
-    // HELPER
-    // =========================================================
     private Trabajo mapRow(ResultSet rs) throws SQLException {
         return new Trabajo(
                 rs.getInt("id"),

@@ -1,0 +1,124 @@
+-- Paso 1: Crear la base de datos
+CREATE DATABASE IF NOT EXISTS bolsa_laboral_app;
+USE sistema_trabajo;
+
+-- Paso 2: Crear las tablas
+
+-- Tabla: usuario
+CREATE TABLE `usuario` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `correo` VARCHAR(50) DEFAULT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `nombre` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`correo`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: perfil
+CREATE TABLE `perfil` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `usuario_id` INT UNSIGNED NOT NULL,
+  `nombre_completo` VARCHAR(100) DEFAULT NULL,
+  `ubicacion` VARCHAR(100) DEFAULT NULL,
+  `correo` VARCHAR(100) DEFAULT NULL,
+  `telefono` VARCHAR(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `perfil_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: trabajo
+CREATE TABLE `trabajo` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `titulo` VARCHAR(100) NOT NULL,
+  `descripcion` TEXT,
+  `categoria` VARCHAR(50) DEFAULT NULL,
+  `experiencia_requerida` VARCHAR(50) DEFAULT NULL,
+  `sueldo` DECIMAL(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: postulacion
+CREATE TABLE `postulacion` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `trabajo_id` INT UNSIGNED NOT NULL,
+  `estado` VARCHAR(50) DEFAULT NULL,
+  `fecha_postulacion` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `usuario_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_postulacion_usuario` (`usuario_id`),
+  KEY `postulacion_ibfk_2` (`trabajo_id`),
+  CONSTRAINT `fk_postulacion_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`),
+  CONSTRAINT `postulacion_ibfk_2` FOREIGN KEY (`trabajo_id`) REFERENCES `trabajo` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: archivo_adjuntado
+CREATE TABLE `archivo_adjuntado` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `perfil_id` INT UNSIGNED NOT NULL,
+  `nombre_archivo` VARCHAR(255) DEFAULT NULL,
+  `ruta_archivo` VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `perfil_id` (`perfil_id`),
+  CONSTRAINT `archivo_adjuntado_ibfk_1` FOREIGN KEY (`perfil_id`) REFERENCES `perfil` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Tabla: notificacion
+CREATE TABLE `notificacion` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `perfil_id` INT UNSIGNED NOT NULL,
+  `mensaje` TEXT,
+  `leido` TINYINT(1) DEFAULT '0',
+  `fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `perfil_id` (`perfil_id`),
+  CONSTRAINT `notificacion_ibfk_1` FOREIGN KEY (`perfil_id`) REFERENCES `perfil` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Paso 3: Insertar los datos
+
+-- Insertar datos en la tabla usuario
+INSERT INTO `usuario` (`id`, `correo`, `password`, `nombre`) VALUES 
+(1, 'frank@correo.com', '12345678', 'Frank'),
+(2, 'admin123@correo.com', '12345678', 'admin'),
+(3, 'diesel123@correo.com', '12345678', 'diesel'),
+(4, 'prueba123@correo.com', '12345678', 'Prueba'),
+(7, 'prueba1234@correo.com', '12345678', 'Prueba2'),
+(8, 'prueba3@correo.com', '12345678', 'Prueba3'),
+(9, 'prueba4@correo.com', '12345678', 'Prueba4'),
+(10, 'prueba5@correo.com', '12345678', 'Prueba5');
+
+-- Insertar datos en la tabla perfil
+INSERT INTO `perfil` (`id`, `usuario_id`, `nombre_completo`, `ubicacion`, `correo`, `telefono`) VALUES 
+(1, 10, '', '', 'prueba5@correo.com', '');
+
+-- Insertar datos en la tabla trabajo
+INSERT INTO `trabajo` (`id`, `titulo`, `descripcion`, `categoria`, `experiencia_requerida`, `sueldo`) VALUES 
+(1, 'Ayudante de obra', 'Asistencia en obras civiles', 'Construccion', '1 año', 950.00),
+(2, 'Albañil calificado', 'Construcción de estructuras', 'Construccion', '2 - 5 años', 1800.00),
+(3, 'Jefe de obra', 'Supervisión de grandes proyectos', 'Construccion', '6 años a más', 3500.00),
+(4, 'Encofrador', 'Montaje de moldes para estructuras', 'Construccion', '2 - 5 años', 1900.00),
+(5, 'Maestro de acabados', 'Acabados finos en interiores', 'Construccion', '6 años a más', 3100.00),
+(6, 'Vendedor ambulante', 'Venta de productos en la calle', 'Venta', '1 año', 1000.00),
+(7, 'Asesor comercial', 'Venta en tienda y seguimiento de clientes', 'Venta', '2 - 5 años', 1600.00),
+(8, 'Gerente de ventas', 'Gestión de equipo comercial', 'Venta', '6 años a más', 3200.00),
+(9, 'Promotor de ventas', 'Promoción de productos en campo', 'Venta', '1 año', 1050.00),
+(10, 'Supervisor de ventas', 'Supervisión y entrenamiento del equipo', 'Venta', '6 años a más', 3100.00),
+(11, 'Conductor de mototaxi', 'Transporte urbano en zonas locales', 'Transporte', '1 año', 1100.00),
+(12, 'Repartidor de mercadería', 'Distribución a nivel ciudad', 'Transporte', '2 - 5 años', 1900.00),
+(13, 'Chofer de camión articulado', 'Transporte interprovincial', 'Transporte', '6 años a más', 4000.00),
+(14, 'Conductor de combi', 'Transporte urbano de pasajeros', 'Transporte', '2 - 5 años', 1850.00),
+(15, 'Chofer ejecutivo', 'Conducción para empresa privada', 'Transporte', '6 años a más', 3200.00),
+(16, 'Ayudante de mudanza', 'Carga y descarga de muebles', 'Mudanza', '1 año', 1000.00),
+(17, 'Coordinador de logística', 'Organización de servicios de mudanza', 'Mudanza', '2 - 5 años', 1750.00),
+(18, 'Supervisor de operaciones', 'Control de operaciones y logística', 'Mudanza', '6 años a más', 3300.00);
+
+-- Insertar datos en la tabla postulacion
+INSERT INTO `postulacion` (`id`, `trabajo_id`, `estado`, `fecha_postulacion`, `usuario_id`) VALUES 
+(4, 2, 'PENDIENTE', '2025-06-25 00:00:00', 2),
+(5, 5, 'PENDIENTE', '2025-06-25 00:00:00', 2),
+(6, 16, 'PENDIENTE', '2025-06-25 00:00:00', 2),
+(7, 8, 'PENDIENTE', '2025-06-25 00:00:00', 2),
+(8, 26, 'PENDIENTE', '2025-06-25 00:00:00', 2);
+
+-- (En este punto también puedes añadir datos a archivo_adjuntado y notificaciones si tienes más detalles sobre esos campos).

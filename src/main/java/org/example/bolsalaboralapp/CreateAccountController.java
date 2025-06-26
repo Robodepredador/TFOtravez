@@ -18,21 +18,19 @@ public class CreateAccountController {
     @FXML private PasswordField txtConfirmarContraseña;
 
     private final UsuarioRepository usuarioRepo;
-    private PerfilRepository perfilRepo; // se inyecta desde fuera
+    private PerfilRepository perfilRepo;
 
     public CreateAccountController() {
         Connection conn = DataBaseConecction.getInstance().getConnection();
         this.usuarioRepo = new UsuarioRepositoryImpl(conn);
     }
 
-    // Este método se llama desde SceneManager al cargar la vista
     public void setPerfilRepository(PerfilRepository perfilRepo) {
         this.perfilRepo = perfilRepo;
     }
 
     @FXML
     private void registrarse() {
-        // Validación de campos vacíos
         if (txtNuevoUsuario.getText().isBlank() ||
                 txtCorreo.getText().isBlank() ||
                 txtNuevaContraseña.getText().isBlank() ||
@@ -41,13 +39,11 @@ public class CreateAccountController {
             return;
         }
 
-        // Validación de contraseña
         if (!txtNuevaContraseña.getText().equals(txtConfirmarContraseña.getText())) {
             mostrarError("Las contraseñas no coinciden.");
             return;
         }
 
-        // Crear nuevo usuario
         Usuario nuevo = new Usuario(
                 0,
                 txtNuevoUsuario.getText(),
@@ -57,17 +53,15 @@ public class CreateAccountController {
 
         usuarioRepo.guardar(nuevo);
 
-        // Obtener ID del usuario recién creado
         int usuarioId = usuarioRepo.obtenerIdUsuarioPorCorreo(txtCorreo.getText());
 
-        // Crear perfil vacío vinculado a ese usuario
         Perfil perfil = new Perfil(
                 0,
                 new Usuario(usuarioId, txtNuevoUsuario.getText(), txtCorreo.getText(), txtNuevaContraseña.getText()),
-                "", // nombre completo
-                "", // ubicación
+                "",
+                "",
                 txtCorreo.getText(),
-                ""  // teléfono
+                ""
         );
 
         perfilRepo.guardar(perfil);
@@ -75,7 +69,6 @@ public class CreateAccountController {
         new Alert(Alert.AlertType.INFORMATION,
                 "Cuenta creada correctamente").showAndWait();
 
-        // Ir al login
         SceneManager.cambiarVista(
                 "/org/example/bolsalaboralapp/login-view.fxml",
                 "Iniciar sesión"

@@ -49,16 +49,13 @@ public class LoginController {
 
             Usuario usuario = usuarioOpt.get();
 
-            // Conexión compartida
             Connection conn = DataBaseConecction.getInstance().getConnection();
 
-            // Repositorios
             TrabajoRepository trabajoRepo = new TrabajoRepositoryImpl(conn);
             ExperienciaRepository experienciaRepo = new ExperienciaRepositoryImpl(conn);
             UsuarioRepository usuarioRepo = new UsuarioRepositoryImpl(conn);
             PostulacionRepository postulacionRepo = new PostulacionRepositoryImpl(usuarioRepo, trabajoRepo);
 
-            // Cambiar a vista principal
             SceneManager.cambiarVista(
                     "/org/example/bolsalaboralapp/main-view.fxml",
                     "Bolsa Laboral – Inicio",
@@ -83,7 +80,7 @@ public class LoginController {
     private void mostrarCreateAccount() {
         Connection conn = DataBaseConecction.getInstance().getConnection();
         UsuarioRepository usuarioRepo = new UsuarioRepositoryImpl(conn);
-        PerfilRepository perfilRepo = new PerfilRepositoryImpl(usuarioRepo); // ← CORRECTO
+        PerfilRepository perfilRepo = new PerfilRepositoryImpl(usuarioRepo);
 
         SceneManager.cambiarVista(
                 "/org/example/bolsalaboralapp/createAccount-view.fxml",

@@ -8,7 +8,6 @@ public class Perfil {
     private String correo;
     private String telefono;
 
-    // Constructor
     public Perfil(int id, Usuario usuario, String nombreCompleto, String ubicacion, String correo, String telefono) {
         this.id = id;
         this.usuario = usuario;
@@ -18,7 +17,6 @@ public class Perfil {
         this.telefono = telefono;
     }
 
-    // Getters y setters
     public int getId() {
         return id;
     }

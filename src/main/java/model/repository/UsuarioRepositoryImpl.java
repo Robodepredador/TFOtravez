@@ -22,13 +22,12 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, usuario.getCorreo());
-            stmt.setString(2, usuario.getContrasena().trim());      // username = correo
-            stmt.setString(3, usuario.getNombreCompleto().trim());  // **MUY recomendable hashearla**
+            stmt.setString(2, usuario.getContrasena().trim());
+            stmt.setString(3, usuario.getNombreCompleto().trim());
 
-            int filas = stmt.executeUpdate();                   // devuelve 1 si insertó
+            int filas = stmt.executeUpdate();
             return filas == 1;
         } catch (SQLException e) {
-            // Muestra un diálogo y registra el problema
             new Alert(Alert.AlertType.ERROR,
                     "No se pudo crear la cuenta:\n" + e.getMessage()).showAndWait();
             e.printStackTrace();

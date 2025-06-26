@@ -19,19 +19,16 @@ import java.util.Optional;
 
 public class MainController {
 
-    // Filtros
     @FXML private CheckBox cbConstruccion, cbVentas, cbTransporte, cbMudanzas;
     @FXML private CheckBox cbUnAnio, cbDosCinco, cbSeisOMas;
     @FXML private CheckBox cbSueldo950, cbSueldo1025, cbSueldo1200;
     @FXML private Button btnActualizarBusqueda;
 
-    // Panel trabajos y detalle
     @FXML private ListView<Trabajo> jobsListView;
     @FXML private Label lblTitulo, lblEmpresa, lblUbicacion;
     @FXML private TextArea txtDescripcion;
     @FXML private VBox jobInfoBox;
 
-    // Servicios
     private FiltroObservableService filtroService;
     private TrabajoFiltradoService trabajoFiltradoService;
     private TrabajoRepository trabajoRepository;
@@ -39,7 +36,7 @@ public class MainController {
     private PostulacionRepository postulacionRepository;
     private UsuarioRepository usuarioRepository;
 
-    private Usuario usuario; // usuario actual
+    private Usuario usuario;
     private int perfilId;
     private Usuario usuarioActual;
 
@@ -165,7 +162,6 @@ public class MainController {
         }
     }
 
-    // Botones navegación
     @FXML private void mostrarPerfil() {
         SceneManager.cambiarVista(
                 "/org/example/bolsalaboralapp/perfil-view.fxml",
